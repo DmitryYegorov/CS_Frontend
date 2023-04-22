@@ -7,20 +7,23 @@ function createBitAccessor(bytes) {
         get: function(itemIndex, bitNumber) {
             let num = bytes[itemIndex];
 
-            console.log(num.toString(2))
-
             return (num >> bitNumber) % 2;
         },
         set: function(itemIndex, bitNumber, value) {
             let num = bytes[itemIndex];
 
+            console.log(num.toString(2));
+
+            const mask = 1 << bitNumber;
+
             if (value === 1) {
-                bytes[itemIndex] = num | (value << bitNumber);
-            } else {
-                bytes[itemIndex] = num & (value << bitNumber);
+                num = num | mask;
+            } else if (value === 0) {
+                num = num & (~mask);
             }
 
-            console.log(bytes[itemIndex].toString(2))
+            console.log(num.toString(2));
+            bytes[itemIndex] = num;
 
         }
     }
@@ -28,5 +31,6 @@ function createBitAccessor(bytes) {
 
 
 console.log(bitArray.get(0, 1));
-bitArray.set(0, 3, 0);
+bitArray.set(0, 1, 0);
+bitArray.set(0, 0, 0);
 console.log(bitArray.get(0, 1));
